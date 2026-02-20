@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    <title>推筒子·H5｜刪除確認 安全操作</title>
+    <style>
+        /* H5 重置與優化 */
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', 'Noto Sans TC', sans-serif;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        html {
+            height: 100%;
+            width: 100%;
+        }
+        body {
+            background: linear-gradient(145deg, #1e3c2c 0%, #2a5a3a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 8px;
+            margin: 0;
+            -webkit-overflow-scrolling: touch;
+            overflow-x: hidden;
+        }
+        .game-container {
+            max-width: 500px;
+            width: 100%;
+            background: #f6efe5;
+            background-image: radial-gradient(circle at 30% 20%, #fff8e7, #e8d9c5);
+            border-radius: 32px 32px 20px 20px;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.6), 0 0 0 2px #b59e7b inset;
+            padding: 14px 12px 20px;
+            border: 4px solid #c9ad7e;
+            margin: 0 auto;
+            position: relative;
+        }
+        h1 {
+            text-align: center;
+            margin: 0 0 10px 0;
+            font-weight: 800;
+            font-size: 2rem;
+            letter-spacing: 2px;
+            color: #2b1b0e;
+            text-shadow: 2px 2px 0 #c9a75e, 4px 4px 0 #917b4b;
+            -webkit-font-smoothing: antialiased;
+        }
+        h1 small {
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            display: block;
+            color: #3d2e1b;
+            text-shadow: none;
+            margin-top: -4px;
+            font-weight: 500;
+        }
+        .setup-panel {
+            background: #d8c8ad;
+            border-radius: 28px 28px 14px 14px;
+            padding: 14px 12px;
+            margin-bottom: 16px;
+            border: 2px solid #aa8e64;
+            box-shadow: inset 0 2px 4px #fef7d0, 0 5px 0 #7b623e;
+        }
+        .flex-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+        .bet-setting {
+            background: #bfa888;
+            border-radius: 40px;
+            padding: 6px 14px;
+            box-shadow: inset 0 -2px 0 #4f3e28, 0 4px 0 #5d4a31;
+            color: #1f2c1a;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1 1 auto;
+        }
+        .bet-setting label {
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+        .bet-setting input {
+            width: 70px;
+            padding: 5px 6px;
+            font-size: 1rem;
+            text-align: center;
+            border-radius: 30px;
+            border: none;
+            background: #fbf3d7;
+            font-weight: 700;
+            box-shadow: inset 0 2px 4px #776b4b;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .bet-setting input[type=number]::-webkit-inner-spin-button,
+        .bet-setting input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .player-mgr {
+            flex: 2 1 240px;
+            background: #ac946f;
+            border-radius: 40px;
+            padding: 8px 12px;
+            box-shadow: inset 0 -2px 0 #4d3a22, 0 4px 0 #5d4a31;
+        }
+        .tag-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
+        }
+        .player-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            background: #eadbc2;
+            padding: 5px 8px;
+            border-radius: 30px;
+            align-items: center;
+        }
+        .player-badge {
+            background: #315f3c;
+            color: #faf0ce;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 3px 0 #1d3a23;
+            cursor: default;
+        }
+        .player-badge .remove-player {
+            background: #b5654b;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 2px 0 #712e1c;
+            transition: 0.05s;
+        }
+        .player-badge .remove-player:active {
+            background: #c77a61;
+            transform: scale(0.95);
+        }
+        .add-player {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+        .add-player input {
+            width: 70px;
+            padding: 5px 6px;
+            border-radius: 25px;
+            border: none;
+            background: #fff7e0;
+            font-size: 0.85rem;
+            border: 1px solid #8f774b;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .add-player button {
+            background: #446d4a;
+            border: none;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            box-shadow: 0 4px 0 #234d2a;
+            cursor: pointer;
+            transition: 0.05s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .add-player button:active {
+            background: #568b5e;
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #234d2a;
+        }
+        .reset-default-btn {
+            background: #52442c;
+            border: none;
+            color: #ffeca2;
+            padding: 5px 14px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            box-shadow: 0 4px 0 #2f241b;
+            cursor: pointer;
+            transition: 0.05s;
+            white-space: nowrap;
+        }
+        .reset-default-btn:active {
+            background: #6f5c40;
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #2f241b;
+        }
+
+        /* 牌桌區 */
+        .table-area {
+            background: #2b6e4e;
+            background: linear-gradient(135deg, #1f593f, #2c7a58);
+            border-radius: 36px 36px 24px 24px;
+            padding: 16px 10px 18px;
+            margin-bottom: 16px;
+            border: 3px solid #b49b6b;
+            box-shadow: inset 0 0 0 4px #4b6b4b, 0 7px 0 #365a36;
+        }
+
+        /* 莊家選擇 */
+        .banker-title {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #f9f0b6;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 0 #3f5a3f;
+        }
+        .banker-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        .banker-btn {
+            background: #e4c894;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #2d451d;
+            box-shadow: 0 5px 0 #8b6b38, 0 4px 6px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: 0.05s;
+            min-width: 80px;
+            flex: 0 1 auto;
+        }
+        .banker-btn.active {
+            background: #f5e56b;
+            box-shadow: 0 2px 0 #8b6b38;
+            transform: translateY(4px);
+        }
+        .banker-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #8b6b38;
+        }
+
+        /* 莊家特殊功能 */
+        .banker-special {
+            background: #c9a062;
+            border-radius: 40px;
+            padding: 10px 12px;
+            margin: 8px 0 12px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: 2px solid #f5d98f;
+            box-shadow: 0 5px 0 #6f4f2b, inset 0 2px 6px #ffeeaa;
+        }
+        .banker-winall-btn {
+            background: #d43f3f;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: white;
+            text-shadow: 2px 2px 0 #5f1f1f;
+            box-shadow: 0 5px 0 #7a2626, 0 5px 8px rgba(0,0,0,0.4);
+            cursor: pointer;
+            transition: 0.05s;
+            letter-spacing: 2px;
+            flex: 1 1 auto;
+            min-width: 120px;
+        }
+        .banker-winall-btn.active {
+            background: #ff6363;
+            box-shadow: 0 2px 0 #9b2f2f;
+            transform: translateY(4px);
+        }
+        .banker-winall-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #7a2626;
+        }
+        .banker-pair-btn {
+            background: #b89b6e;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #242c17;
+            box-shadow: 0 5px 0 #665233, 0 5px 8px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: 0.05s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1 1 auto;
+            min-width: 120px;
+            justify-content: center;
+        }
+        .banker-pair-btn.active {
+            background: #f7cf8b;
+            box-shadow: 0 2px 0 #665233;
+            transform: translateY(4px);
+        }
+        .banker-pair-btn.active::after {
+            content: " ✓✓";
+            font-weight: 900;
+            font-size: 1.3rem;
+        }
+        .banker-pair-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #665233;
+        }
+
+        /* 玩家卡片 - 每行兩個 */
+        .players-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0 12px;
+        }
+        .player-card {
+            background: #eedcb6;
+            border-radius: 30px;
+            padding: 12px 8px 10px;
+            box-shadow: 0 6px 0 #936f3d, inset 0 2px 8px #fff1cf;
+            border: 2px solid #c99f5a;
+            transition: 0.1s;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        .player-card.banker-card {
+            background: #f7e3b1;
+            border: 3px solid #f0b340;
+            box-shadow: 0 6px 0 #b47d2e, inset 0 2px 8px #fff1cf;
+        }
+        .player-name-badge {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: #af8749;
+            color: #1b321b;
+            padding: 5px 0;
+            border-radius: 30px;
+            margin-bottom: 10px;
+            box-shadow: inset 0 -3px 0 #5f482a;
+        }
+        .banker-card .player-name-badge {
+            background: #d9a343;
+            color: #2a4700;
+        }
+
+        /* 輸贏按鈕 */
+        .win-loss-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .win-btn, .loss-btn {
+            flex: 1;
+            border: none;
+            padding: 12px 0;
+            border-radius: 30px;
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: white;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+            box-shadow: 0 5px 0 #474747, 0 4px 6px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: 0.05s;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+        .win-btn {
+            background: #2f8f5c;
+            box-shadow: 0 5px 0 #1d633d;
+        }
+        .loss-btn {
+            background: #b14e4e;
+            box-shadow: 0 5px 0 #7a3535;
+        }
+        .win-btn.active {
+            background: #4aef8c;
+            box-shadow: 0 2px 0 #1d633d;
+            transform: translateY(4px);
+            color: #003015;
+            opacity: 1;
+        }
+        .loss-btn.active {
+            background: #ff7a7a;
+            box-shadow: 0 2px 0 #7a3535;
+            transform: translateY(4px);
+            color: #2f0000;
+            opacity: 1;
+        }
+        .win-btn:active, .loss-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #474747;
+        }
+        .win-btn:disabled, .loss-btn:disabled {
+            opacity: 0.5;
+            cursor: default;
+            transform: none;
+            box-shadow: 0 5px 0 #474747;
+            pointer-events: none;
+        }
+
+        /* 對子按鈕 */
+        .pair-toggle {
+            display: flex;
+            justify-content: center;
+        }
+        .player-pair-btn {
+            background: #b89b6e;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #242c17;
+            box-shadow: 0 4px 0 #665233, 0 4px 6px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: 0.05s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .player-pair-btn.active {
+            background: #f7cf8b;
+            box-shadow: 0 2px 0 #665233;
+            transform: translateY(3px);
+        }
+        .player-pair-btn.active::after {
+            content: " ✓";
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+        .player-pair-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #665233;
+        }
+        .player-pair-btn:disabled {
+            opacity: 0.3;
+            cursor: default;
+            transform: none;
+            box-shadow: 0 4px 0 #665233;
+            pointer-events: none;
+        }
+
+        /* 底部按鈕群 */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0 5px;
+        }
+        .record-btn, .delete-last-btn {
+            border: none;
+            padding: 14px 8px;
+            border-radius: 40px;
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: #faf0cf;
+            box-shadow: 0 6px 0 #794f1f, 0 6px 12px black;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: 0.05s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .record-btn {
+            background: #b8863d;
+        }
+        .delete-last-btn {
+            background: #a05838;
+            box-shadow: 0 6px 0 #643f28, 0 6px 12px black;
+        }
+        .record-btn:active, .delete-last-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #794f1f;
+        }
+        .delete-last-btn:active {
+            box-shadow: 0 2px 0 #643f28;
+        }
+        .delete-last-btn:disabled {
+            opacity: 0.4;
+            cursor: default;
+            transform: none;
+            box-shadow: 0 6px 0 #643f28;
+            pointer-events: none;
+        }
+
+        /* 歷史表格 */
+        .history-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #2f2f1a;
+            margin: 6px 0 4px;
+            text-shadow: 2px 2px 0 #c9a95c;
+        }
+        .score-table {
+            background: #d4c2a2;
+            border-radius: 24px 24px 14px 14px;
+            padding: 10px 6px;
+            border: 2px solid #9e814e;
+            box-shadow: inset 0 0 0 2px #f1e5ce, 0 5px 0 #695437;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            min-width: 380px;
+        }
+        th {
+            background: #517d44;
+            color: #fef5cf;
+            padding: 6px 2px;
+            border-radius: 12px 12px 0 0;
+            font-size: 0.9rem;
+            border: 1px solid #2c542c;
+        }
+        td {
+            background: #f2e3cb;
+            padding: 5px 2px;
+            border: 1px solid #ac8e62;
+        }
+        .total-row {
+            background: #b48b54;
+            font-weight: 800;
+        }
+        .total-row td {
+            background: #cba16d;
+            border-top: 3px solid #4b3e1f;
+        }
+
+        .footer-note {
+            text-align: right;
+            color: #3f3a1f;
+            font-weight: 500;
+            margin-top: 4px;
+            font-size: 0.75rem;
+        }
+        .reset-history {
+            background: #a54b2c;
+            color: white;
+            border: none;
+            padding: 7px 16px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 0 #632e19;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: 0.05s;
+        }
+        .reset-history:active {
+            background: #c45f3b;
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #632e19;
+        }
+
+        /* H5 提示框 */
+        .alert-prompt {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #f8d7a0;
+            border: 4px solid #b64926;
+            border-radius: 30px;
+            padding: 16px 24px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #4a1f00;
+            box-shadow: 0 8px 0 #7f3f1f, 0 12px 16px black;
+            z-index: 1000;
+            display: none;
+            text-align: center;
+            max-width: 80%;
+        }
+        .alert-prompt.show {
+            display: block;
+        }
+
+        /* 自訂確認對話框 */
+        .confirm-dialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #f8e3c2;
+            border: 5px solid #a05838;
+            border-radius: 40px;
+            padding: 25px 30px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #4a1f00;
+            box-shadow: 0 12px 0 #643f28, 0 15px 25px black;
+            z-index: 2000;
+            display: none;
+            text-align: center;
+            max-width: 85%;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .confirm-dialog.show {
+            display: flex;
+        }
+        .confirm-dialog .message {
+            line-height: 1.4;
+        }
+        .confirm-dialog .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        .confirm-dialog .confirm-yes {
+            background: #b14e4e;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 40px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 5px 0 #7a3535;
+            cursor: pointer;
+            min-width: 100px;
+        }
+        .confirm-dialog .confirm-no {
+            background: #2f8f5c;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 40px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 5px 0 #1d633d;
+            cursor: pointer;
+            min-width: 100px;
+        }
+        .confirm-dialog .confirm-yes:active,
+        .confirm-dialog .confirm-no:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #7a3535;
+        }
+        .confirm-dialog .confirm-no:active {
+            box-shadow: 0 2px 0 #1d633d;
+        }
+
+        /* 莊家標記 */
+        .banker-mark {
+            margin-top: 6px;
+            font-weight: bold;
+            color: #b3370b;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <h1>推筒子·H5<small>刪除確認 安全操作</small></h1>
+
+    <!-- 設定區 -->
+    <div class="setup-panel">
+        <div class="flex-row">
+            <div class="bet-setting">
+                <label>💰 <input type="number" id="baseBet" min="1" value="100" step="1"></label>
+                <span>分</span>
+            </div>
+            <div class="player-mgr">
+                <div class="tag-group">
+                    <div class="player-tags" id="playerTagsContainer"></div>
+                    <div class="add-player">
+                        <input type="text" id="newPlayerName" placeholder="新玩家" maxlength="8">
+                        <button id="addPlayerBtn">＋</button>
+                    </div>
+                    <button class="reset-default-btn" id="resetDefaultPlayers">預設</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 牌桌區 -->
+    <div class="table-area">
+        <div class="banker-title">👑 莊家</div>
+        <div class="banker-buttons" id="bankerButtons"></div>
+
+        <div class="banker-special">
+            <button class="banker-winall-btn" id="bankerWinAllBtn">💀 通殺</button>
+            <button class="banker-pair-btn" id="bankerPairBtn">🀄️ 莊對</button>
+        </div>
+
+        <!-- 玩家卡片 - 每行兩個 -->
+        <div class="players-grid" id="playersGrid"></div>
+
+        <div class="action-buttons">
+            <button class="record-btn" id="recordRoundBtn">⚡ 記錄</button>
+            <button class="delete-last-btn" id="deleteLastRoundBtn">↩️ 上局</button>
+        </div>
+    </div>
+
+    <!-- 歷史總分表 -->
+    <div class="history-title">📋 歷史紀錄</div>
+    <div class="score-table">
+        <table id="scoreTable">
+            <thead><tr id="tableHeader"><th>局</th></tr></thead>
+            <tbody id="tableBody"><tr><td colspan="10" style="text-align:center;">尚無紀錄</td></tr></tbody>
+        </table>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+            <span class="footer-note">✓ 刪除需確認</span>
+            <button class="reset-history" id="resetHistoryBtn">🗑️ 全部清除</button>
+        </div>
+    </div>
+</div>
+
+<!-- 自訂提示框 -->
+<div class="alert-prompt" id="customAlert"></div>
+
+<!-- 自訂確認對話框 -->
+<div class="confirm-dialog" id="confirmDialog">
+    <div class="message" id="confirmMessage">確定刪除上一局？</div>
+    <div class="buttons">
+        <button class="confirm-yes" id="confirmYes">確定</button>
+        <button class="confirm-no" id="confirmNo">取消</button>
+    </div>
+</div>
+
+<script>
+    (function() {
+        "use strict";
+        
+        // 狀態管理
+        let players = ['東方', '西門', '南宮'];
+        let baseBet = 100;
+        let rounds = [];
+        let currentRoundId = 0;
+        let currentBanker = players[0];
+        let bankerWinAll = false;
+        let bankerHasPair = false;
+
+        // 確認對話框回調
+        let confirmCallback = null;
+
+        // DOM 元素
+        const baseBetInput = document.getElementById('baseBet');
+        const playerTagsDiv = document.getElementById('playerTagsContainer');
+        const bankerButtonsDiv = document.getElementById('bankerButtons');
+        const playersGridDiv = document.getElementById('playersGrid');
+        const tableHeader = document.getElementById('tableHeader');
+        const tableBody = document.getElementById('tableBody');
+        const addPlayerBtn = document.getElementById('addPlayerBtn');
+        const newPlayerName = document.getElementById('newPlayerName');
+        const resetDefaultBtn = document.getElementById('resetDefaultPlayers');
+        const recordBtn = document.getElementById('recordRoundBtn');
+        const deleteLastBtn = document.getElementById('deleteLastRoundBtn');
+        const resetHistoryBtn = document.getElementById('resetHistoryBtn');
+        const bankerWinAllBtn = document.getElementById('bankerWinAllBtn');
+        const bankerPairBtn = document.getElementById('bankerPairBtn');
+        const customAlert = document.getElementById('customAlert');
+        
+        // 確認對話框元素
+        const confirmDialog = document.getElementById('confirmDialog');
+        const confirmMessage = document.getElementById('confirmMessage');
+        const confirmYes = document.getElementById('confirmYes');
+        const confirmNo = document.getElementById('confirmNo');
+
+        // 顯示自訂確認對話框
+        function showConfirm(message, onConfirm) {
+            confirmMessage.textContent = message;
+            confirmDialog.classList.add('show');
+            confirmCallback = onConfirm;
+        }
+
+        // 隱藏確認對話框
+        function hideConfirm() {
+            confirmDialog.classList.remove('show');
+            confirmCallback = null;
+        }
+
+        // 確認按鈕事件
+        confirmYes.addEventListener('click', () => {
+            if (confirmCallback) {
+                confirmCallback();
+            }
+            hideConfirm();
+        });
+
+        confirmNo.addEventListener('click', () => {
+            hideConfirm();
+        });
+
+        // 提示框
+        function showAlert(msg) {
+            customAlert.textContent = msg;
+            customAlert.classList.add('show');
+            setTimeout(() => customAlert.classList.remove('show'), 1200);
+        }
+
+        function updateDeleteButton() {
+            deleteLastBtn.disabled = rounds.length === 0;
+        }
+
+        // 莊家按鈕事件
+        bankerWinAllBtn.addEventListener('click', () => {
+            bankerWinAll = !bankerWinAll;
+            bankerWinAllBtn.classList.toggle('active', bankerWinAll);
+            if (bankerWinAll) {
+                document.querySelectorAll('.player-card').forEach(card => {
+                    if (card.dataset.player === currentBanker) return;
+                    const win = card.querySelector('.win-btn');
+                    const loss = card.querySelector('.loss-btn');
+                    const pair = card.querySelector('.player-pair-btn');
+                    win.classList.remove('active');
+                    loss.classList.add('active');
+                    pair.disabled = true;
+                    pair.classList.remove('active');
+                });
+            } else {
+                document.querySelectorAll('.player-card').forEach(card => {
+                    if (card.dataset.player === currentBanker) return;
+                    const win = card.querySelector('.win-btn');
+                    const loss = card.querySelector('.loss-btn');
+                    const pair = card.querySelector('.player-pair-btn');
+                    if (loss.classList.contains('active')) pair.disabled = true;
+                    else if (win.classList.contains('active')) pair.disabled = false;
+                    else pair.disabled = true;
+                });
+            }
+        });
+
+        bankerPairBtn.addEventListener('click', () => {
+            bankerHasPair = !bankerHasPair;
+            bankerPairBtn.classList.toggle('active', bankerHasPair);
+        });
+
+        // 渲染玩家標籤
+        function renderPlayerTags() {
+            playerTagsDiv.innerHTML = '';
+            players.forEach((p, i) => {
+                const b = document.createElement('span');
+                b.className = 'player-badge';
+                b.innerHTML = `${p} <span class="remove-player" data-index="${i}">✕</span>`;
+                playerTagsDiv.appendChild(b);
+            });
+            document.querySelectorAll('.remove-player').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const idx = e.target.getAttribute('data-index');
+                    if (idx !== null) removePlayer(parseInt(idx));
+                });
+            });
+        }
+
+        function removePlayer(idx) {
+            if (players.length <= 2) { 
+                showAlert('至少需要2位玩家'); 
+                return; 
+            }
+            players.splice(idx, 1);
+            if (!players.includes(currentBanker)) currentBanker = players[0];
+            refreshAll();
+        }
+
+        // 渲染莊家按鈕
+        function renderBankerButtons() {
+            bankerButtonsDiv.innerHTML = '';
+            players.forEach(p => {
+                const btn = document.createElement('button');
+                btn.className = `banker-btn ${p === currentBanker ? 'active' : ''}`;
+                btn.textContent = p;
+                btn.addEventListener('click', () => {
+                    currentBanker = p;
+                    document.querySelectorAll('.banker-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderPlayerCards();
+                    if (bankerWinAll) {
+                        document.querySelectorAll('.player-card').forEach(card => {
+                            if (card.dataset.player === currentBanker) return;
+                            const win = card.querySelector('.win-btn');
+                            const loss = card.querySelector('.loss-btn');
+                            const pair = card.querySelector('.player-pair-btn');
+                            win.classList.remove('active');
+                            loss.classList.add('active');
+                            pair.disabled = true;
+                            pair.classList.remove('active');
+                        });
+                    }
+                });
+                bankerButtonsDiv.appendChild(btn);
+            });
+        }
+
+        // 渲染玩家卡片
+        function renderPlayerCards() {
+            playersGridDiv.innerHTML = '';
+            players.forEach(player => {
+                const card = document.createElement('div');
+                card.className = `player-card ${player === currentBanker ? 'banker-card' : ''}`;
+                card.dataset.player = player;
+
+                const nameDiv = document.createElement('div');
+                nameDiv.className = 'player-name-badge';
+                nameDiv.textContent = player;
+
+                const btnGroup = document.createElement('div');
+                btnGroup.className = 'win-loss-buttons';
+
+                const win = document.createElement('button');
+                win.className = 'win-btn';
+                win.textContent = '贏';
+                const loss = document.createElement('button');
+                loss.className = 'loss-btn';
+                loss.textContent = '輸';
+
+                const pairDiv = document.createElement('div');
+                pairDiv.className = 'pair-toggle';
+                const pair = document.createElement('button');
+                pair.className = 'player-pair-btn';
+                pair.innerHTML = '🀄️ 對';
+
+                if (player === currentBanker) {
+                    win.disabled = true;
+                    loss.disabled = true;
+                    pair.disabled = true;
+                } else {
+                    win.addEventListener('click', () => {
+                        win.classList.add('active');
+                        loss.classList.remove('active');
+                        pair.disabled = false;
+                        if (bankerWinAll) {
+                            bankerWinAll = false;
+                            bankerWinAllBtn.classList.remove('active');
+                        }
+                    });
+                    loss.addEventListener('click', () => {
+                        loss.classList.add('active');
+                        win.classList.remove('active');
+                        pair.disabled = true;
+                        pair.classList.remove('active');
+                        if (bankerWinAll) {
+                            bankerWinAll = false;
+                            bankerWinAllBtn.classList.remove('active');
+                        }
+                    });
+                    pair.addEventListener('click', () => {
+                        if (!pair.disabled) pair.classList.toggle('active');
+                    });
+                    pair.disabled = true;
+                }
+
+                btnGroup.appendChild(win);
+                btnGroup.appendChild(loss);
+                pairDiv.appendChild(pair);
+                card.appendChild(nameDiv);
+                card.appendChild(btnGroup);
+                card.appendChild(pairDiv);
+
+                if (player === currentBanker) {
+                    const mark = document.createElement('div');
+                    mark.className = 'banker-mark';
+                    mark.textContent = '👑 莊家';
+                    card.appendChild(mark);
+                }
+
+                playersGridDiv.appendChild(card);
+            });
+
+            if (bankerWinAll) {
+                document.querySelectorAll('.player-card').forEach(card => {
+                    if (card.dataset.player === currentBanker) return;
+                    const win = card.querySelector('.win-btn');
+                    const loss = card.querySelector('.loss-btn');
+                    const pair = card.querySelector('.player-pair-btn');
+                    win.classList.remove('active');
+                    loss.classList.add('active');
+                    pair.disabled = true;
+                    pair.classList.remove('active');
+                });
+            }
+        }
+
+        // 檢查所有閒家選擇
+        function checkAllSelected() {
+            let all = true;
+            const un = [];
+            document.querySelectorAll('.player-card').forEach(card => {
+                if (card.dataset.player === currentBanker) return;
+                const win = card.querySelector('.win-btn');
+                const loss = card.querySelector('.loss-btn');
+                if (!win.classList.contains('active') && !loss.classList.contains('active')) {
+                    all = false;
+                    un.push(card.dataset.player);
+                }
+            });
+            return { all, un };
+        }
+
+        // 收集結果
+        function gatherResults() {
+            const res = {};
+            document.querySelectorAll('.player-card').forEach(card => {
+                const p = card.dataset.player;
+                if (p === currentBanker) return;
+                const win = card.querySelector('.win-btn').classList.contains('active');
+                const pair = card.querySelector('.player-pair-btn').classList.contains('active');
+                res[p] = { win, pair };
+            });
+            return res;
+        }
+
+        // 計算分數
+        function calculateScores(banker, results, winAll, bankerPair) {
+            const scores = {};
+            players.forEach(p => scores[p] = 0);
+            const nonBankers = players.filter(p => p !== banker);
+            const n = nonBankers.length;
+
+            if (winAll) {
+                let total = n * baseBet;
+                if (bankerPair) total *= 2;
+                const each = total / n;
+                nonBankers.forEach(p => scores[p] = -each);
+                scores[banker] = total;
+                return scores;
+            }
+
+            for (let p of nonBankers) {
+                const r = results[p];
+                if (!r) continue;
+                let amt = r.win ? baseBet : -baseBet;
+                if (r.pair) amt *= 2;
+                scores[p] = amt;
+            }
+
+            if (bankerPair) {
+                nonBankers.forEach(p => scores[p] = 0);
+                for (let p of nonBankers) {
+                    const r = results[p];
+                    if (!r) continue;
+                    if (r.win) {
+                        let w = baseBet;
+                        if (r.pair) w *= 2;
+                        scores[p] = w;
+                    } else {
+                        let l = -baseBet * 2;
+                        if (r.pair) l *= 2;
+                        scores[p] = l;
+                    }
+                }
+            }
+
+            const total = nonBankers.reduce((acc, p) => acc + (scores[p] || 0), 0);
+            scores[banker] = -total;
+            return scores;
+        }
+
+        // 記錄本局
+        function recordRound() {
+            if (players.length < 2) { 
+                showAlert('至少需要2位玩家'); 
+                return; 
+            }
+            const { all, un } = checkAllSelected();
+            if (!all) { 
+                showAlert(`請選 ${un.join(' ')} 輸贏`); 
+                return; 
+            }
+
+            const results = gatherResults();
+            const scores = calculateScores(currentBanker, results, bankerWinAll, bankerHasPair);
+
+            rounds.push({
+                id: currentRoundId++,
+                banker: currentBanker,
+                bankerWinAll,
+                bankerHasPair,
+                playerResults: JSON.parse(JSON.stringify(results)),
+                scores
+            });
+
+            document.querySelectorAll('.player-card').forEach(card => {
+                if (card.dataset.player === currentBanker) return;
+                const win = card.querySelector('.win-btn');
+                const loss = card.querySelector('.loss-btn');
+                const pair = card.querySelector('.player-pair-btn');
+                win.classList.remove('active');
+                loss.classList.remove('active');
+                pair.classList.remove('active');
+                pair.disabled = true;
+            });
+
+            bankerWinAll = false;
+            bankerHasPair = false;
+            bankerWinAllBtn.classList.remove('active');
+            bankerPairBtn.classList.remove('active');
+
+            renderHistory();
+            updateDeleteButton();
+        }
+
+        // 刪除上一局 (需要確認)
+        function deleteLast() {
+            if (rounds.length === 0) return;
+            
+            showConfirm('確定刪除上一局？', () => {
+                rounds.pop();
+                currentRoundId = rounds.length;
+                renderHistory();
+                updateDeleteButton();
+                showAlert('已刪除上一局');
+            });
+        }
+
+        // 全部清除 (需要確認)
+        function resetHistory() {
+            if (rounds.length === 0) return;
+            
+            showConfirm('確定清除全部紀錄？', () => {
+                rounds = [];
+                currentRoundId = 0;
+                renderHistory();
+                updateDeleteButton();
+                showAlert('已清除全部紀錄');
+            });
+        }
+
+        // 渲染歷史表格
+        function renderHistory() {
+            let header = '<tr><th>局</th><th>莊</th><th>殺</th><th>莊對</th>';
+            players.forEach(p => header += `<th>${p}</th>`);
+            header += '</tr>';
+            tableHeader.innerHTML = header;
+
+            if (rounds.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="${players.length+4}" style="text-align:center;">尚無紀錄</td></tr>`;
+                return;
+            }
+
+            let body = '';
+            rounds.forEach((r, i) => {
+                body += '<tr>';
+                body += `<td>${i+1}</td>`;
+                body += `<td style="background:#ebc27a;">${r.banker}</td>`;
+                body += `<td>${r.bankerWinAll ? '💀' : '-'}</td>`;
+                body += `<td>${r.bankerHasPair ? '🀄️' : '-'}</td>`;
+
+                players.forEach(p => {
+                    let val = r.scores[p] || 0;
+                    let fmt = Number.isInteger(val) ? val : val.toFixed(2);
+                    let color = val > 0 ? '#1b7a1b;font-weight:800;' : (val < 0 ? '#b13030;font-weight:800;' : '');
+                    let mark = '';
+                    if (p === r.banker && r.bankerHasPair) mark = ' 🀄️';
+                    else if (r.playerResults?.[p]?.pair) mark = ' 🀄️';
+                    body += `<td style="color:${color}">${fmt}${mark}</td>`;
+                });
+                body += '</tr>';
+            });
+
+            let total = '<tr class="total-row"><td colspan="4">🏆 總分</td>';
+            players.forEach(p => {
+                let sum = rounds.reduce((acc, r) => acc + (r.scores[p] || 0), 0);
+                let fmt = Number.isInteger(sum) ? sum : sum.toFixed(2);
+                let color = sum > 0 ? '#135f13;' : (sum < 0 ? '#a12121;' : '');
+                total += `<td style="color:${color}">${fmt}</td>`;
+            });
+            total += '</tr>';
+            tableBody.innerHTML = body + total;
+        }
+
+        // 新增玩家
+        function addPlayer() {
+            let name = newPlayerName.value.trim();
+            if (!name) { 
+                showAlert('請輸入名字'); 
+                return; 
+            }
+            if (players.includes(name)) { 
+                showAlert('名稱重複'); 
+                return; 
+            }
+            players.push(name);
+            newPlayerName.value = '';
+            if (players.length === 1) currentBanker = players[0];
+            refreshAll();
+        }
+
+        // 重置預設玩家
+        function resetDefault() {
+            players = ['東方', '西門', '南宮'];
+            currentBanker = players[0];
+            refreshAll();
+        }
+
+        // 刷新全部
+        function refreshAll() {
+            renderPlayerTags();
+            renderBankerButtons();
+            renderPlayerCards();
+            bankerWinAllBtn.classList.toggle('active', bankerWinAll);
+            bankerPairBtn.classList.toggle('active', bankerHasPair);
+            renderHistory();
+            updateDeleteButton();
+        }
+
+        // 監聽基數注額
+        baseBetInput.addEventListener('input', (e) => {
+            let v = parseInt(e.target.value);
+            baseBet = (isNaN(v) || v < 1) ? 1 : v;
+        });
+
+        // 綁定事件
+        addPlayerBtn.addEventListener('click', addPlayer);
+        resetDefaultBtn.addEventListener('click', resetDefault);
+        recordBtn.addEventListener('click', recordRound);
+        deleteLastBtn.addEventListener('click', deleteLast);
+        resetHistoryBtn.addEventListener('click', resetHistory);
+        newPlayerName.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addPlayerBtn.click();
+        });
+
+        // 初始化
+        refreshAll();
+    })();
+</script>
+</body>
+</html>
